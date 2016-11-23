@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.verksamheten.texttimer">
+
+    <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+
+    <application
+        android:name="com.verksamheten.texttimer.GlobalClass"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/app_name"
+            android:parentActivityName=".TextAndDateManager"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".TextAndDateManager" />
+        </activity>
+        <activity
+            android:name=".TextAndDateManager"
+            android:label="@string/title_activity_text_and_date_manager"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".DateSelector"
+            android:label="@string/title_activity_date_and_time_selector"
+            android:parentActivityName=".TextAndDateManager"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".TextAndDateManager" />
+        </activity>
+        <activity
+            android:name=".TimeSelector"
+            android:label="@string/title_activity_time_selector"
+            android:parentActivityName=".TextAndDateManager"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".TextAndDateManager" />
+        </activity>
+        <activity
+            android:name=".GetContacts"
+            android:label="@string/title_activity_get_contacts"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <receiver android:name=".Alarm_Receiver"/>
+        <service android:name=".SendMessageService" android:enabled="true"/>
+    </application>
+
+</manifest>
