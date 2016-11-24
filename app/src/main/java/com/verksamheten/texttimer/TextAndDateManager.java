@@ -30,6 +30,7 @@ public class TextAndDateManager extends AppCompatActivity {
     PendingIntent pendingIntent;
     Context context;
 
+    TextView messageView;
     TextView textView;
     TextView dateView;
     TextView timeView;
@@ -49,6 +50,8 @@ public class TextAndDateManager extends AppCompatActivity {
         alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
         final Calendar calendar = Calendar.getInstance();
+
+         messageView = (TextView) findViewById(R.id.msgTextView);
 
         final ContactsClass contact = globalVariable.getContact();
         final TimePicker timePicker = globalVariable.getTimePicker();
@@ -72,6 +75,7 @@ public class TextAndDateManager extends AppCompatActivity {
 
         dateBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                saveMessage(messageView);
                 Intent i = new Intent(TextAndDateManager.this, DateSelector.class);
                 startActivity(i);
             }
@@ -80,6 +84,7 @@ public class TextAndDateManager extends AppCompatActivity {
 
         timeBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                saveMessage(messageView);
                     Intent i = new Intent(TextAndDateManager.this, TimeSelector.class);
                 startActivity(i);
             }
@@ -91,6 +96,8 @@ public class TextAndDateManager extends AppCompatActivity {
         chooseContactBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                saveMessage(messageView);
 
                 Intent i = new Intent(TextAndDateManager.this, GetContacts.class);
                 startActivity(i);
@@ -104,7 +111,7 @@ public class TextAndDateManager extends AppCompatActivity {
 
         executeBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                TextView messageView = (TextView) findViewById(R.id.msgTextView);
+
 
                 calendar.set(datePicker.getYear(),datePicker.getMonth(),datePicker.getDayOfMonth(),timePicker.getHour(),timePicker.getMinute(),0);
 
@@ -160,6 +167,12 @@ public class TextAndDateManager extends AppCompatActivity {
             }
         });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    private void saveMessage(TextView tv) {
+        if (tv != null) {
+        tv.setText("hjsan");
+    }
     }
 
    /* public void sendMessage(){

@@ -63,6 +63,7 @@
         android:text="Execute"
         android:id="@+id/executeBtn"
 
+
         android:layout_below="@+id/msgTextView"
         android:layout_toEndOf="@+id/dateBtn" />
 
@@ -79,8 +80,8 @@
         android:layout_height="wrap_content"
         android:text="Cancel"
         android:id="@+id/cancelBtn"
-        android:layout_below="@+id/msgTextView"
-        android:layout_alignParentStart="true" />
+        android:layout_alignTop="@+id/executeBtn"
+        android:layout_toStartOf="@+id/dateBtn" />
 
     <TextView
         android:layout_width="wrap_content"
