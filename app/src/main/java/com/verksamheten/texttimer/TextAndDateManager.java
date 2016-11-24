@@ -117,6 +117,7 @@ public class TextAndDateManager extends AppCompatActivity {
 
                 Log.e("OUT", calendar.getTime() + " " + calendar.getTimeInMillis() + " " + alarmManager.toString());
 
+                if(contact != null){
                 Snackbar bar = Snackbar.make(v, "Executed! Message will be sent at: "+ calendar.getTime() + " To: "+contact.getName(), Snackbar.LENGTH_INDEFINITE)
 
                         .setAction("Dismiss", new View.OnClickListener() {
@@ -127,6 +128,8 @@ public class TextAndDateManager extends AppCompatActivity {
                         });
 
                 bar.show();
+            }
+
             }
         });
 

@@ -19,7 +19,7 @@ import android.widget.Toast;
 public class SendMessageService extends Service{
     private static final int MY_PERMISSIONS_REQUEST_SEND_SMS =0 ;
 
-    MediaPlayer mediaPlayer;
+   // MediaPlayer mediaPlayer;
     boolean isRunning;
     int startId;
 
@@ -56,22 +56,23 @@ public class SendMessageService extends Service{
             final GlobalClass globalVariable = (GlobalClass) getApplicationContext();
 
             String phoneNumber = globalVariable.getContact().getPhoneNumber();
+
             String message = intent.getExtras().getString("message");
 
             SmsManager smsManager = SmsManager.getDefault();
             smsManager.sendTextMessage(phoneNumber, null, message, null, null);
 
-            mediaPlayer = MediaPlayer.create(this,R.raw.codebreaker);
+          /*  mediaPlayer = MediaPlayer.create(this,R.raw.codebreaker);
             mediaPlayer.setLooping(true);
-            mediaPlayer.start();
+            mediaPlayer.start();*/
 
             this.isRunning = true;
             this.startId = 0;
         }
         else if(this.isRunning && startId == 0){
 
-            mediaPlayer.stop();
-            mediaPlayer.reset();
+        /*    mediaPlayer.stop();
+            mediaPlayer.reset();*/
 
             this.isRunning = false;
             this.startId = 0;
