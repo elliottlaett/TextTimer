@@ -62,7 +62,7 @@ public class SendMessageService extends Service{
             SmsManager smsManager = SmsManager.getDefault();
             smsManager.sendTextMessage(phoneNumber, null, message, null, null);
 
-          /*  mediaPlayer = MediaPlayer.create(this,R.raw.codebreaker);
+          /* mediaPlayer = MediaPlayer.create(this,R.raw.codebreaker);
             mediaPlayer.setLooping(true);
             mediaPlayer.start();*/
 
