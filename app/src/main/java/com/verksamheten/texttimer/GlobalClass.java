@@ -10,6 +10,24 @@ public class GlobalClass extends Application{
     private ContactsClass contact;
     private DatePicker datePicker;
     private TimePicker timePicker;
+    private String message;
+    private String phoneNumber;
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
 
     public ContactsClass getContact() {
         return contact;

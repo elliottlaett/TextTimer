@@ -59,13 +59,12 @@ public class GetContacts extends AppCompatActivity {
             }
         }).start();
 
-        // Set onclicklistener to the list item.
         mListView.setOnItemClickListener(new OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-                //TODO Do whatever you want with the list data
+
                 Intent i = new Intent(GetContacts.this, TextAndDateManager.class);
 
                 final GlobalClass globalVariable = (GlobalClass) getApplicationContext();

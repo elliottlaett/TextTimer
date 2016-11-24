@@ -19,7 +19,6 @@ import android.widget.Toast;
 public class SendMessageService extends Service{
     private static final int MY_PERMISSIONS_REQUEST_SEND_SMS =0 ;
 
-   // MediaPlayer mediaPlayer;
     boolean isRunning;
     int startId;
 
@@ -32,11 +31,7 @@ public class SendMessageService extends Service{
     @Override
     public int onStartCommand(Intent intent, int flags, int startId){
 
-        Log.e("OUT", "in the service start command" + startId + " " + intent);
-
         String state = intent.getExtras().getString("extra");
-
-        Log.e("OUT", state+"");
 
         assert state != null;
         switch (state) {
@@ -52,27 +47,24 @@ public class SendMessageService extends Service{
         }
 
         if(!this.isRunning && startId == 1){
+            String phoneNumber;
 
-            final GlobalClass globalVariable = (GlobalClass) getApplicationContext();
+            ContactsClass contact = (ContactsClass) intent.getSerializableExtra("contact");
 
-            String phoneNumber = globalVariable.getContact().getPhoneNumber();
-
+            if (contact != null) {
+                phoneNumber = contact.getPhoneNumber();
+            }else{
+                phoneNumber = intent.getExtras().getString("phoneNumber");
+            }
             String message = intent.getExtras().getString("message");
 
             SmsManager smsManager = SmsManager.getDefault();
             smsManager.sendTextMessage(phoneNumber, null, message, null, null);
 
-          /* mediaPlayer = MediaPlayer.create(this,R.raw.codebreaker);
-            mediaPlayer.setLooping(true);
-            mediaPlayer.start();*/
-
             this.isRunning = true;
             this.startId = 0;
         }
         else if(this.isRunning && startId == 0){
-
-        /*    mediaPlayer.stop();
-            mediaPlayer.reset();*/
 
             this.isRunning = false;
             this.startId = 0;

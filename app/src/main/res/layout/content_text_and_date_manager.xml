@@ -17,10 +17,10 @@
         android:layout_height="wrap_content"
         android:id="@+id/msgTextView"
         android:hint="Text message"
-        android:layout_below="@+id/timeView"
+        android:layout_marginTop="70dp"
+        android:layout_below="@+id/textView"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="46dp"
-        android:layout_alignEnd="@+id/textView" />
+        android:layout_alignEnd="@+id/editNumber" />
 
     <Button
         android:layout_width="wrap_content"
@@ -92,5 +92,15 @@
         android:layout_below="@+id/timeView"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/editNumber"
+        android:layout_below="@+id/textView"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:hint="Phone number"
+        android:numeric="integer" />
 
 </RelativeLayout>

@@ -1,10 +1,13 @@
 package com.verksamheten.texttimer;
 
+import android.Manifest;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -13,10 +16,10 @@ import android.view.View;
 
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 
 import android.widget.Toast;
@@ -25,11 +28,13 @@ import java.util.Calendar;
 
 public class TextAndDateManager extends AppCompatActivity {
     private static final int MY_PERMISSIONS_REQUEST_SEND_SMS =0 ;
+    private static final int PERMISSIONS_REQUEST_READ_CONTACTS =100 ;
 
     AlarmManager alarmManager;
     PendingIntent pendingIntent;
     Context context;
 
+    EditText phoneNumberEdit;
     TextView messageView;
     TextView textView;
     TextView dateView;
@@ -51,7 +56,12 @@ public class TextAndDateManager extends AppCompatActivity {
 
         final Calendar calendar = Calendar.getInstance();
 
+
          messageView = (TextView) findViewById(R.id.msgTextView);
+        phoneNumberEdit = (EditText) findViewById(R.id.editNumber);
+
+        messageView.setText(globalVariable.getMessage());
+        phoneNumberEdit.setText(globalVariable.getPhoneNumber());
 
         final ContactsClass contact = globalVariable.getContact();
         final TimePicker timePicker = globalVariable.getTimePicker();
@@ -61,11 +71,17 @@ public class TextAndDateManager extends AppCompatActivity {
         dateView = (TextView) findViewById(R.id.dateView);
         timeView = (TextView) findViewById(R.id.timeView);
 
+        // Solve problem to handle permissions correct.
+        getPermissionReadContacts();
+        sendMessagePermission();
+
         if (contact != null) {
             textView.setText("TO: " + contact.getName() + " " + contact.getPhoneNumber());
         }
         if (datePicker!=null){
-            dateView.setText("Date: " + datePicker.getYear() +"-"+datePicker.getMonth()+"-"+datePicker.getDayOfMonth());
+            Log.e("OUT", datePicker.getMonth() + "");
+            int month = datePicker.getMonth()+1;
+            dateView.setText("Date: " + datePicker.getYear() +"-"+month+"-"+datePicker.getDayOfMonth());
         }
             if (timePicker != null){
                 timeView.setText("Time: "+timePicker.getHour()+":"+timePicker.getMinute());
@@ -75,7 +91,8 @@ public class TextAndDateManager extends AppCompatActivity {
 
         dateBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                saveMessage(messageView);
+                globalVariable.setMessage(messageView.getText().toString());
+                globalVariable.setPhoneNumber(phoneNumberEdit.getText().toString());
                 Intent i = new Intent(TextAndDateManager.this, DateSelector.class);
                 startActivity(i);
             }
@@ -84,7 +101,8 @@ public class TextAndDateManager extends AppCompatActivity {
 
         timeBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                saveMessage(messageView);
+                globalVariable.setMessage(messageView.getText().toString());
+                globalVariable.setPhoneNumber(phoneNumberEdit.getText().toString());
                     Intent i = new Intent(TextAndDateManager.this, TimeSelector.class);
                 startActivity(i);
             }
@@ -97,7 +115,8 @@ public class TextAndDateManager extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                saveMessage(messageView);
+                globalVariable.setMessage(messageView.getText().toString());
+                globalVariable.setPhoneNumber(phoneNumberEdit.getText().toString());
 
                 Intent i = new Intent(TextAndDateManager.this, GetContacts.class);
                 startActivity(i);
@@ -112,31 +131,39 @@ public class TextAndDateManager extends AppCompatActivity {
         executeBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
+                if ((datePicker != null) && (timePicker != null) && (contact != null || !phoneNumberEdit.getText().toString().equals(""))){
 
-                calendar.set(datePicker.getYear(),datePicker.getMonth(),datePicker.getDayOfMonth(),timePicker.getHour(),timePicker.getMinute(),0);
+                    calendar.set(datePicker.getYear(), datePicker.getMonth(), datePicker.getDayOfMonth(), timePicker.getHour(), timePicker.getMinute(), 0);
 
                 intent.putExtra("extra", "alarm on");
                 intent.putExtra("message", messageView.getText().toString());
-
-                pendingIntent = PendingIntent.getBroadcast(TextAndDateManager.this, 0, intent,PendingIntent.FLAG_UPDATE_CURRENT);
+                    if(contact != null){
+                        intent.putExtra("contact", contact);
+                    }else {
+                        intent.putExtra("phoneNumber", phoneNumberEdit.getText().toString());
+                    }
+                pendingIntent = PendingIntent.getBroadcast(TextAndDateManager.this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
                 alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
                 //alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
 
                 Log.e("OUT", calendar.getTime() + " " + calendar.getTimeInMillis() + " " + alarmManager.toString());
 
-                if(contact != null){
-                Snackbar bar = Snackbar.make(v, "Executed! Message will be sent at: "+ calendar.getTime() + " To: "+contact.getName(), Snackbar.LENGTH_INDEFINITE)
+                    Snackbar bar = Snackbar.make(v, "Executed! Message will be sent at: " + calendar.getTime(), Snackbar.LENGTH_INDEFINITE)
 
-                        .setAction("Dismiss", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                // Handle user action
-                            }
-                        });
+                            .setAction("Dismiss", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    // Handle user action
+                                }
+                            });
 
-                bar.show();
+                    bar.show();
+
             }
-
+                else{
+                    Toast.makeText(TextAndDateManager.this, "Some field(s) are not filled",
+                            Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -157,59 +184,32 @@ public class TextAndDateManager extends AppCompatActivity {
 
             }
         });
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
-    private void saveMessage(TextView tv) {
-        if (tv != null) {
-        tv.setText("hjsan");
-    }
-    }
-
-   /* public void sendMessage(){
-        TextView tv = (TextView) findViewById(R.id.msgTextView);
-        phoneNo = "0737283583";
-        message = tv.getText().toString();
-
-        Log.i("OUT", message);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED){
-            requestPermissions(new String[]{Manifest.permission.SEND_SMS}, MY_PERMISSIONS_REQUEST_SEND_SMS);
+    private void getPermissionReadContacts() {
+        // Check the SDK version and whether the permission is already granted or not.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, PERMISSIONS_REQUEST_READ_CONTACTS);
             //After this point you wait for callback in onRequestPermissionsResult(int, String[], int[]) overriden method
-        } else {
-            // Android version is lesser than 6.0 or the permission is already granted.
-            SmsManager smsManager = SmsManager.getDefault();
-            smsManager.sendTextMessage(phoneNo, null, message, null, null);
-            Toast.makeText(getApplicationContext(), "SMS sent.",
-                    Toast.LENGTH_LONG).show();
-
         }
     }
-
     @Override
-    public void onRequestPermissionsResult(int requestCode,String permissions[], int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                                           int[] grantResults) {
+        if (requestCode == PERMISSIONS_REQUEST_READ_CONTACTS) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            }
 
-        switch (requestCode) {
-            case MY_PERMISSIONS_REQUEST_SEND_SMS: {
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    sendMessage();
-                } else {
-
-                    Log.e("OUT", "In the else");
-
-                    return;
+            if(requestCode == MY_PERMISSIONS_REQUEST_SEND_SMS) {
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 }
             }
         }
-    }*/
+    }
+    public void sendMessagePermission(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED){
+            requestPermissions(new String[]{Manifest.permission.SEND_SMS}, MY_PERMISSIONS_REQUEST_SEND_SMS);
+            //After this point you wait for callback in onRequestPermissionsResult(int, String[], int[]) overriden method
+        }
+    }
 }

@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         // Find the list view
-        this.lstNames = (ListView) findViewById(R.id.lstNames);
+      //  this.lstNames = (ListView) findViewById(R.id.lstNames);
 
         // Read and show the contacts
         showContacts();
@@ -54,10 +54,10 @@ public class MainActivity extends AppCompatActivity {
             requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, PERMISSIONS_REQUEST_READ_CONTACTS);
             //After this point you wait for callback in onRequestPermissionsResult(int, String[], int[]) overriden method
 
-            Log.e("OUT", "Nu är vi i iffen");
+
 
         } else {
-            Log.e("OUT", "Nu är vi i ELSEN");
+
             // Android version is lesser than 6.0 or the permission is already granted.
             final ArrayList<ContactsClass> fetchedContacts = getContactNames();
 
@@ -76,8 +76,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
 
-            Log.e("out", fetchedContacts+"");
-            lstNames.setAdapter(adapter);
+                 lstNames.setAdapter(adapter);
         }
     }
 
