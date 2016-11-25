@@ -13,6 +13,8 @@ import android.telephony.SmsManager;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.util.Date;
+
 /**
  * Created by Elliott on 2016-11-23.
  */
@@ -57,7 +59,7 @@ public class SendMessageService extends Service{
                 phoneNumber = intent.getExtras().getString("phoneNumber");
             }
             String message = intent.getExtras().getString("message");
-
+Log.e("OUT", "--- "+new Date().toString());
             SmsManager smsManager = SmsManager.getDefault();
             smsManager.sendTextMessage(phoneNumber, null, message, null, null);
 

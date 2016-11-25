@@ -143,8 +143,8 @@ public class TextAndDateManager extends AppCompatActivity {
                         intent.putExtra("phoneNumber", phoneNumberEdit.getText().toString());
                     }
                 pendingIntent = PendingIntent.getBroadcast(TextAndDateManager.this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-                alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
-                //alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+                //alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+                alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
 
                 Log.e("OUT", calendar.getTime() + " " + calendar.getTimeInMillis() + " " + alarmManager.toString());
 
